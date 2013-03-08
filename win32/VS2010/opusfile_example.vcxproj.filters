@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="seeking_example.c">
+    <ClCompile Include="..\..\examples\opusfile_example.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

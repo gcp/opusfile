@@ -15,34 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="internal.c">
+    <ClCompile Include="..\..\examples\seeking_example.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="opusfile.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stream.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wincerts.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="http.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="info.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="winerrno.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\opusfile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
