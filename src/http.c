@@ -2036,15 +2036,15 @@ static char *op_base64_encode(char *_dst,const char *_src,int _len){
     s1=_src[3*i+1];
     s2=_src[3*i+2];
     _dst[4*i+0]=BASE64_TABLE[s0>>2];
-    _dst[4*i+1]=BASE64_TABLE[s0&3<<4|s1>>4];
-    _dst[4*i+2]=BASE64_TABLE[s1&15<<2|s2>>6];
+    _dst[4*i+1]=BASE64_TABLE[(s0&3)<<4|s1>>4];
+    _dst[4*i+2]=BASE64_TABLE[(s1&15)<<2|s2>>6];
     _dst[4*i+3]=BASE64_TABLE[s2&63];
   }
   _len-=3*i;
   if(_len==1){
     s0=_src[3*i+0];
     _dst[4*i+0]=BASE64_TABLE[s0>>2];
-    _dst[4*i+1]=BASE64_TABLE[s0&3<<4];
+    _dst[4*i+1]=BASE64_TABLE[(s0&3)<<4];
     _dst[4*i+2]='=';
     _dst[4*i+3]='=';
     i++;
@@ -2053,8 +2053,8 @@ static char *op_base64_encode(char *_dst,const char *_src,int _len){
     s0=_src[3*i+0];
     s1=_src[3*i+1];
     _dst[4*i+0]=BASE64_TABLE[s0>>2];
-    _dst[4*i+1]=BASE64_TABLE[s0&3<<4|s1>>4];
-    _dst[4*i+2]=BASE64_TABLE[s1&15<<2];
+    _dst[4*i+1]=BASE64_TABLE[(s0&3)<<4|s1>>4];
+    _dst[4*i+2]=BASE64_TABLE[(s1&15)<<2];
     _dst[4*i+3]='=';
     i++;
   }
@@ -3217,6 +3217,54 @@ void *op_url_stream_create(OpusFileCallbacks *_cb,
   void    *ret;
   va_start(ap,_url);
   ret=op_url_stream_vcreate(_cb,_url,ap);
+  va_end(ap);
+  return ret;
+}
+
+/*Convenience routines to open/test URLs in a single step.*/
+
+OggOpusFile *op_vopen_url(const char *_url,int *_error,va_list _ap){
+  OpusFileCallbacks  cb;
+  OggOpusFile       *of;
+  void              *source;
+  source=op_url_stream_vcreate(&cb,_url,_ap);
+  if(OP_UNLIKELY(source==NULL)){
+    if(_error!=NULL)*_error=OP_EFAULT;
+    return NULL;
+  }
+  of=op_open_callbacks(source,&cb,NULL,0,_error);
+  if(OP_UNLIKELY(of==NULL))(*cb.close)(source);
+  return of;
+}
+
+OggOpusFile *op_open_url(const char *_url,int *_error,...){
+  OggOpusFile *ret;
+  va_list      ap;
+  va_start(ap,_error);
+  ret=op_vopen_url(_url,_error,ap);
+  va_end(ap);
+  return ret;
+}
+
+OggOpusFile *op_vtest_url(const char *_url,int *_error,va_list _ap){
+  OpusFileCallbacks  cb;
+  OggOpusFile       *of;
+  void              *source;
+  source=op_url_stream_vcreate(&cb,_url,_ap);
+  if(OP_UNLIKELY(source==NULL)){
+    if(_error!=NULL)*_error=OP_EFAULT;
+    return NULL;
+  }
+  of=op_test_callbacks(source,&cb,NULL,0,_error);
+  if(OP_UNLIKELY(of==NULL))(*cb.close)(source);
+  return of;
+}
+
+OggOpusFile *op_test_url(const char *_url,int *_error,...){
+  OggOpusFile *ret;
+  va_list      ap;
+  va_start(ap,_error);
+  ret=op_vtest_url(_url,_error,ap);
   va_end(ap);
   return ret;
 }
